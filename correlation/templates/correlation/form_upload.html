@@ -1,7 +1,13 @@
+{% extends "correlation/base.html" %}
 
-<form action="correlation/post_result.html" method="post">
+{% block body %}
+
+<form class="" action="" method="POST">
+
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
 
 </form>
+
+{% endblock %}
