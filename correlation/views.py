@@ -3,6 +3,8 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from .forms import PostForm
+from .models import StockTicker
+
 
 # Create your views here.
 def index(request):
@@ -20,6 +22,10 @@ def post_form_upload(request):
         form = PostForm(request.POST)
 
         if form.is_valid():
+            instance = StockTicker()
+            instance.ticker = request.POST.get('ticker')
+            instance.save()
+
             return post_result(request)
 
     context = {'form': form}
