@@ -1,10 +1,10 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
-from django.shortcuts import render, get_object_or_404
-from django.core.urlresolvers import reverse
+
+from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm
 from .models import StockTicker
-
+from django.contrib.auth import authenticate, login
+from django.views.generic import View
+from .forms import UserForm
 
 # Create your views here.
 def index(request):
@@ -42,3 +42,37 @@ def post_result(request):
     }
 
     return render(request, 'correlation/post_result.html', context)
+
+
+class UserFormView(View):
+    form_class = UserForm
+    template_name = 'correlation/registration_form.html'
+
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    #proccess form data
+    def post(self, request):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            #clean normalized data
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user.set_password(password)
+            user.save()
+
+            # return User objects if credentials are correct
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    print('user is logged in')
+                    return redirect('correlation:index')
+
+        return render(request, self.template_name, {'form': form})

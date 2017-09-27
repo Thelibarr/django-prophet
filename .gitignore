@@ -8,6 +8,7 @@
 *.so
 *.xml
 *.pic
+*.pyc
 
 # Packages #
 ############
