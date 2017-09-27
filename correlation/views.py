@@ -1,14 +1,13 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm
-from .models import StockTicker
+from .models import Stock
 from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from .forms import UserForm
 
 # Create your views here.
 def index(request):
-    list_of_numbers=list(range(30))
 
     return render(request, 'correlation/predict.html')
 
@@ -22,7 +21,7 @@ def post_form_upload(request):
         form = PostForm(request.POST)
 
         if form.is_valid():
-            instance = StockTicker()
+            instance = Stock()
             instance.ticker = request.POST.get('ticker')
             instance.save()
 
